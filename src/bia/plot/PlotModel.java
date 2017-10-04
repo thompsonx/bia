@@ -44,7 +44,7 @@ public class PlotModel implements SurfacePlotModel {
 
     @Override
     public boolean isMesh() {
-        return true;
+        return false;
     }
 
     @Override
@@ -69,12 +69,12 @@ public class PlotModel implements SurfacePlotModel {
 
     @Override
     public int getCalcDivisions() {
-        return 75;
+        return 80;
     }
 
     @Override
     public int getDispDivisions() {
-        return 75;
+        return 80;
     }
 
     @Override

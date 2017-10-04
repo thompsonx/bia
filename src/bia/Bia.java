@@ -10,6 +10,7 @@ import bia.functions.BealeFn;
 import bia.functions.BoothFn;
 import bia.functions.IFunction;
 import bia.functions.MatyasFn;
+import bia.functions.ParetFn;
 import bia.functions.RastriginFn;
 import bia.functions.SphereFn;
 import bia.functions.StyblinskiTangFn;
@@ -27,9 +28,8 @@ public class Bia {
      */
     public static void main(String[] args) {
         
-        IFunction fn = new ThreeHumpCamelFn();
+        IFunction fn = new ParetFn();
         PlotView pv = new PlotView(fn);
-        pv.setVisible(true);
         
     }
     

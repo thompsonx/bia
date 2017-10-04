@@ -50,7 +50,7 @@ public class RastriginFn implements IFunction
 
     @Override
     public float getZMin() {
-        return -100;
+        return 0;
     }
 
     @Override

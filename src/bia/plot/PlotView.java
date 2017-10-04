@@ -7,6 +7,7 @@ package bia.plot;
 
 import bia.functions.IFunction;
 import java.awt.BorderLayout;
+import javax.swing.JFrame;
 import net.sf.surfaceplot.SurfaceCanvas;
 
 /**
@@ -23,6 +24,7 @@ public class PlotView extends javax.swing.JFrame {
         canvas.setModel(model);
         getContentPane().add(canvas, BorderLayout.CENTER);
         canvas.repaint();
+        setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         setVisible(true);
     }
     
