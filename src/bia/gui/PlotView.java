@@ -3,7 +3,7 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package bia.plot;
+package bia.gui;
 
 import bia.functions.IFunction;
 import java.awt.BorderLayout;
@@ -21,7 +21,6 @@ public class PlotView extends javax.swing.JFrame {
         setSize(1000, 800);
         PlotModel model = new PlotModel(fn);
         SurfaceCanvas canvas = new SurfaceCanvas();
-        canvas.setModel(model);
         getContentPane().add(canvas, BorderLayout.CENTER);
         canvas.repaint();
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);

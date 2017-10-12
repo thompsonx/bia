@@ -3,10 +3,13 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package bia.plot;
+package bia.gui;
 
 import bia.functions.IFunction;
+import bia.population.PopulationGenerator;
 import java.util.ArrayList;
+import java.util.List;
+import net.sf.surfaceplot.Point3DHolder;
 import net.sf.surfaceplot.SurfacePlotModel;
 
 /**
@@ -21,6 +24,13 @@ public class PlotModel implements SurfacePlotModel {
     {
         this.fun = fn;
     }
+
+    @Override
+    public List<Point3DHolder> getExtraPoints() {
+        return PopulationGenerator.genInFloat(100, this.fun);
+    }
+    
+    
     
     @Override
     public int getPlotMode() {

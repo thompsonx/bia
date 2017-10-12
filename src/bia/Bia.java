@@ -15,7 +15,10 @@ import bia.functions.RastriginFn;
 import bia.functions.SphereFn;
 import bia.functions.StyblinskiTangFn;
 import bia.functions.ThreeHumpCamelFn;
-import bia.plot.PlotView;
+import bia.gui.MainView;
+import bia.gui.PlotView;
+import bia.population.PopulationGenerator;
+import java.util.List;
 
 /**
  *
@@ -28,9 +31,9 @@ public class Bia {
      */
     public static void main(String[] args) {
         
-        IFunction fn = new ParetFn();
-        PlotView pv = new PlotView(fn);
-        
+//        PlotView pv = new PlotView(new RastriginFn());
+        MainView mv = new MainView();
+        mv.setVisible(true);
     }
     
 }
