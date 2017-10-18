@@ -5,6 +5,8 @@
  */
 package bia.gui;
 
+import bia.algorithms.BlindAlg;
+import bia.algorithms.IAlgorithm;
 import bia.functions.AckleysFn;
 import bia.functions.BealeFn;
 import bia.functions.BoothFn;
@@ -15,8 +17,10 @@ import bia.functions.RastriginFn;
 import bia.functions.SphereFn;
 import bia.functions.StyblinskiTangFn;
 import bia.functions.ThreeHumpCamelFn;
+import bia.population.FloatGenerator;
+import bia.population.IGenerator;
+import bia.population.IntGenerator;
 import java.awt.BorderLayout;
-import javax.swing.JPanel;
 import net.sf.surfaceplot.SurfaceCanvas;
 
 /**
@@ -26,6 +30,7 @@ import net.sf.surfaceplot.SurfaceCanvas;
 public class MainView extends javax.swing.JFrame {
     
     private SurfaceCanvas plot;
+    private PlotThread thread = null;
     
     /**
      * Creates new form MainView
@@ -33,6 +38,8 @@ public class MainView extends javax.swing.JFrame {
     public MainView() {
         initComponents();
         
+        this.spnPopSize.setValue(100);
+        this.spnGenerations.setValue(10);
         this.plot = new SurfaceCanvas();
         this.plotPanel.setLayout(new BorderLayout());
         this.plotPanel.add(this.plot, BorderLayout.CENTER);
@@ -55,6 +62,10 @@ public class MainView extends javax.swing.JFrame {
         spnPopSize = new javax.swing.JSpinner();
         btnPlot = new javax.swing.JButton();
         plotPanel = new javax.swing.JPanel();
+        lblGenerations = new javax.swing.JLabel();
+        spnGenerations = new javax.swing.JSpinner();
+        btnPause = new javax.swing.JButton();
+        btnPlay = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
@@ -68,7 +79,7 @@ public class MainView extends javax.swing.JFrame {
 
         cmbPopPrec.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Float", "Integer" }));
 
-        btnPlot.setText("Plot");
+        btnPlot.setText("Start generating");
         btnPlot.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 btnPlotActionPerformed(evt);
@@ -83,8 +94,26 @@ public class MainView extends javax.swing.JFrame {
         );
         plotPanelLayout.setVerticalGroup(
             plotPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 317, Short.MAX_VALUE)
+            .addGap(0, 351, Short.MAX_VALUE)
         );
+
+        lblGenerations.setText("Generations:");
+
+        btnPause.setText("Pause");
+        btnPause.setEnabled(false);
+        btnPause.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnPauseActionPerformed(evt);
+            }
+        });
+
+        btnPlay.setText("Play");
+        btnPlay.setEnabled(false);
+        btnPlay.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnPlayActionPerformed(evt);
+            }
+        });
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
@@ -102,12 +131,23 @@ public class MainView extends javax.swing.JFrame {
                     .addComponent(spnPopSize))
                 .addGap(0, 194, Short.MAX_VALUE))
             .addGroup(layout.createSequentialGroup()
-                .addGap(193, 193, 193)
-                .addComponent(btnPlot)
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-            .addGroup(layout.createSequentialGroup()
-                .addContainerGap()
-                .addComponent(plotPanel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(layout.createSequentialGroup()
+                        .addComponent(lblGenerations)
+                        .addGap(25, 25, 25)
+                        .addComponent(spnGenerations, javax.swing.GroupLayout.PREFERRED_SIZE, 171, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(0, 0, Short.MAX_VALUE))
+                    .addGroup(layout.createSequentialGroup()
+                        .addContainerGap()
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(plotPanel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                            .addGroup(layout.createSequentialGroup()
+                                .addGap(0, 0, Short.MAX_VALUE)
+                                .addComponent(btnPlot)
+                                .addGap(64, 64, 64)
+                                .addComponent(btnPlay)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addComponent(btnPause)))))
                 .addContainerGap())
         );
         layout.setVerticalGroup(
@@ -124,8 +164,15 @@ public class MainView extends javax.swing.JFrame {
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(cmbPopPrec, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(lblPopPrec))
+                .addGap(6, 6, 6)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(spnGenerations, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(lblGenerations))
                 .addGap(18, 18, 18)
-                .addComponent(btnPlot)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(btnPlot)
+                    .addComponent(btnPause)
+                    .addComponent(btnPlay))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(plotPanel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                 .addContainerGap())
@@ -143,10 +190,40 @@ public class MainView extends javax.swing.JFrame {
 
     private void btnPlotActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnPlotActionPerformed
 
-        PlotModel model = new PlotModel(this.getSelectedFunction());
-        this.plot.setModel(model);
-        this.plot.repaint();
+        IFunction fn = this.getSelectedFunction();
+        IGenerator gen = this.getSelectedGenerator();
+        int popSize = (Integer)this.spnPopSize.getValue();
+        int genNum = (Integer)this.spnGenerations.getValue();
+        IAlgorithm alg = new BlindAlg(fn, gen, genNum, popSize);
+        
+        boolean started = false;
+        if (this.thread == null)
+        {
+            this.thread = new PlotThread(this.plot, alg);
+            this.thread.start();
+            started = true;
+        }
+        else if (this.thread.isFinished())
+        {
+            this.thread = new PlotThread(this.plot, alg);
+            this.thread.start();
+            started = true;
+        }
+        
+        if (started)
+        {
+            this.btnPlay.setEnabled(true);
+            this.btnPause.setEnabled(true);
+        }
     }//GEN-LAST:event_btnPlotActionPerformed
+
+    private void btnPlayActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnPlayActionPerformed
+        this.thread.play();
+    }//GEN-LAST:event_btnPlayActionPerformed
+
+    private void btnPauseActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnPauseActionPerformed
+        this.thread.pause();
+    }//GEN-LAST:event_btnPauseActionPerformed
 
     private IFunction getSelectedFunction()
     {
@@ -175,15 +252,33 @@ public class MainView extends javax.swing.JFrame {
                 return new AckleysFn();
         }
     }
+    
+    private IGenerator getSelectedGenerator()
+    {
+        int gen = this.cmbPopPrec.getSelectedIndex();
+        switch (gen)
+        {
+            case 0:
+                return new FloatGenerator();
+            case 1:
+                return new IntGenerator();
+            default:
+                return new FloatGenerator();
+        }
+    }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JButton btnPause;
+    private javax.swing.JButton btnPlay;
     private javax.swing.JButton btnPlot;
     private javax.swing.JComboBox<String> cmbFn;
     private javax.swing.JComboBox<String> cmbPopPrec;
     private javax.swing.JLabel lblFn;
+    private javax.swing.JLabel lblGenerations;
     private javax.swing.JLabel lblPopPrec;
     private javax.swing.JLabel lblPopSize;
     private javax.swing.JPanel plotPanel;
+    private javax.swing.JSpinner spnGenerations;
     private javax.swing.JSpinner spnPopSize;
     // End of variables declaration//GEN-END:variables
 }

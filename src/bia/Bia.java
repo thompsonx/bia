@@ -16,7 +16,6 @@ import bia.functions.SphereFn;
 import bia.functions.StyblinskiTangFn;
 import bia.functions.ThreeHumpCamelFn;
 import bia.gui.MainView;
-import bia.gui.PlotView;
 import bia.population.PopulationGenerator;
 import java.util.List;
 

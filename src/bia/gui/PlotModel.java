@@ -19,18 +19,18 @@ import net.sf.surfaceplot.SurfacePlotModel;
 public class PlotModel implements SurfacePlotModel {
 
     private IFunction fun;
+    private List<Point3DHolder> population;
     
-    public PlotModel (IFunction fn)
+    public PlotModel (IFunction fn, List<Point3DHolder> population)
     {
         this.fun = fn;
+        this.population = population;
     }
 
     @Override
     public List<Point3DHolder> getExtraPoints() {
-        return PopulationGenerator.genInFloat(100, this.fun);
+        return this.population;
     }
-    
-    
     
     @Override
     public int getPlotMode() {
