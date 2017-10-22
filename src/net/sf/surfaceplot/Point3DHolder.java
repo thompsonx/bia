@@ -42,4 +42,9 @@ public class Point3DHolder {
         double distance = Math.sqrt(square(this.x - x) + square(this.y - y));
         return distance <= xRangeThreshold;
     }
+
+    @Override
+    public String toString() {
+        return "[" + x + ", " + y + ", " + z + "]";
+    }
 }
