@@ -5,7 +5,9 @@
  */
 package bia.gui;
 
+import bia.algorithms.AnnealingAlg;
 import bia.algorithms.BlindAlg;
+import bia.algorithms.DiffEvolutionAlg;
 import bia.algorithms.IAlgorithm;
 import bia.algorithms.ImprovedBlindAlg;
 import bia.functions.AckleysFn;
@@ -205,7 +207,9 @@ public class MainView extends javax.swing.JFrame {
         IGenerator gen = this.getSelectedGenerator();
         int popSize = (Integer)this.spnPopSize.getValue();
         int genNum = (Integer)this.spnGenerations.getValue();
-        IAlgorithm alg = new ImprovedBlindAlg(fn, gen, genNum, popSize);
+        //IAlgorithm alg = new AnnealingAlg(fn, gen, 10, 0.1f, 0.9f, popSize);
+        IAlgorithm alg = new DiffEvolutionAlg(fn, gen, genNum, 
+                popSize, 0.9f, 0.9f);
         
         boolean started = false;
         if (this.thread == null)
