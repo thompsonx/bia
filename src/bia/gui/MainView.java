@@ -10,6 +10,7 @@ import bia.algorithms.BlindAlg;
 import bia.algorithms.DiffEvolutionAlg;
 import bia.algorithms.IAlgorithm;
 import bia.algorithms.ImprovedBlindAlg;
+import bia.algorithms.JDEEvolutionAlg;
 import bia.functions.AckleysFn;
 import bia.functions.BealeFn;
 import bia.functions.BoothFn;
@@ -208,8 +209,8 @@ public class MainView extends javax.swing.JFrame {
         int popSize = (Integer)this.spnPopSize.getValue();
         int genNum = (Integer)this.spnGenerations.getValue();
         //IAlgorithm alg = new AnnealingAlg(fn, gen, 10, 0.1f, 0.9f, popSize);
-        IAlgorithm alg = new DiffEvolutionAlg(fn, gen, genNum, 
-                popSize, 0.9f, 0.9f);
+        IAlgorithm alg = new JDEEvolutionAlg(fn, gen, genNum, 
+                popSize, 0.5f, 0.9f);
         
         boolean started = false;
         if (this.thread == null)
