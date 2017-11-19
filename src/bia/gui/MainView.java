@@ -11,6 +11,7 @@ import bia.algorithms.DiffEvolutionAlg;
 import bia.algorithms.IAlgorithm;
 import bia.algorithms.ImprovedBlindAlg;
 import bia.algorithms.JDEEvolutionAlg;
+import bia.algorithms.SOMAAlg;
 import bia.functions.AckleysFn;
 import bia.functions.BealeFn;
 import bia.functions.BoothFn;
@@ -25,6 +26,7 @@ import bia.population.FloatGenerator;
 import bia.population.IGenerator;
 import bia.population.IntGenerator;
 import java.awt.BorderLayout;
+import java.util.List;
 import net.sf.surfaceplot.SurfaceCanvas;
 
 /**
@@ -35,6 +37,7 @@ public class MainView extends javax.swing.JFrame {
     
     private SurfaceCanvas plot;
     private PlotThread thread = null;
+    private AlgorithmPanel algPanel;
     
     /**
      * Creates new form MainView
@@ -42,11 +45,15 @@ public class MainView extends javax.swing.JFrame {
     public MainView() {
         initComponents();
         
-        this.spnPopSize.setValue(100);
-        this.spnGenerations.setValue(10);
         this.plot = new SurfaceCanvas();
         this.plotPanel.setLayout(new BorderLayout());
         this.plotPanel.add(this.plot, BorderLayout.CENTER);
+        
+        this.algPanel = new AlgorithmPanel();
+        this.algPanel.setAlgorithm(new BlindAlg(this.getSelectedFunction(), 
+                this.getSelectedGenerator()));
+        this.panelAlg.setLayout(new BorderLayout());
+        this.panelAlg.add(this.algPanel, BorderLayout.CENTER);
     }
 
     /**
@@ -60,26 +67,23 @@ public class MainView extends javax.swing.JFrame {
 
         lblFn = new javax.swing.JLabel();
         cmbFn = new javax.swing.JComboBox<>();
-        lblPopSize = new javax.swing.JLabel();
         lblPopPrec = new javax.swing.JLabel();
         cmbPopPrec = new javax.swing.JComboBox<>();
-        spnPopSize = new javax.swing.JSpinner();
         btnPlot = new javax.swing.JButton();
         plotPanel = new javax.swing.JPanel();
-        lblGenerations = new javax.swing.JLabel();
-        spnGenerations = new javax.swing.JSpinner();
         btnPause = new javax.swing.JButton();
         btnPlay = new javax.swing.JButton();
         lblBest = new javax.swing.JLabel();
         lblBestValue = new javax.swing.JLabel();
+        lblAlg = new javax.swing.JLabel();
+        cmbAlg = new javax.swing.JComboBox<>();
+        panelAlg = new javax.swing.JPanel();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
         lblFn.setText("Function:");
 
         cmbFn.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Ackley's", "Beale", "Booth", "Matyas", "Parent", "Rastrigin", "Sphere", "Styblinski-Tang", "Three-hump camel" }));
-
-        lblPopSize.setText("Population size:");
 
         lblPopPrec.setText("Precision:");
 
@@ -100,10 +104,8 @@ public class MainView extends javax.swing.JFrame {
         );
         plotPanelLayout.setVerticalGroup(
             plotPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 351, Short.MAX_VALUE)
+            .addGap(0, 335, Short.MAX_VALUE)
         );
-
-        lblGenerations.setText("Generations:");
 
         btnPause.setText("Pause");
         btnPause.setEnabled(false);
@@ -125,28 +127,32 @@ public class MainView extends javax.swing.JFrame {
 
         lblBestValue.setText("none");
 
+        lblAlg.setText("Algorithm:");
+
+        cmbAlg.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Blind search", "Improved blind search", "Simulated annealing", "Differential Evolution", "jDE", "SOMA" }));
+        cmbAlg.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                cmbAlgActionPerformed(evt);
+            }
+        });
+
+        javax.swing.GroupLayout panelAlgLayout = new javax.swing.GroupLayout(panelAlg);
+        panelAlg.setLayout(panelAlgLayout);
+        panelAlgLayout.setHorizontalGroup(
+            panelAlgLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGap(0, 0, Short.MAX_VALUE)
+        );
+        panelAlgLayout.setVerticalGroup(
+            panelAlgLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGap(0, 146, Short.MAX_VALUE)
+        );
+
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(lblFn)
-                    .addComponent(lblPopSize)
-                    .addComponent(lblPopPrec))
-                .addGap(6, 6, 6)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                    .addComponent(cmbFn, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addComponent(cmbPopPrec, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addComponent(spnPopSize))
-                .addGap(0, 194, Short.MAX_VALUE))
-            .addGroup(layout.createSequentialGroup()
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(layout.createSequentialGroup()
-                        .addComponent(lblGenerations)
-                        .addGap(25, 25, 25)
-                        .addComponent(spnGenerations, javax.swing.GroupLayout.PREFERRED_SIZE, 171, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addGap(0, 0, Short.MAX_VALUE))
                     .addGroup(layout.createSequentialGroup()
                         .addContainerGap()
                         .addComponent(plotPanel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
@@ -156,31 +162,45 @@ public class MainView extends javax.swing.JFrame {
                         .addComponent(lblBest)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addComponent(lblBestValue)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 424, Short.MAX_VALUE)
                         .addComponent(btnPlay)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(btnPause)))
+                        .addComponent(btnPause))
+                    .addGroup(layout.createSequentialGroup()
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                                .addComponent(lblPopPrec)
+                                .addComponent(lblFn))
+                            .addComponent(lblAlg))
+                        .addGap(44, 44, 44)
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                            .addComponent(cmbFn, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                            .addComponent(cmbPopPrec, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                            .addComponent(cmbAlg, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(panelAlg, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))
                 .addContainerGap())
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(cmbFn, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(lblFn))
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(layout.createSequentialGroup()
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                            .addComponent(cmbFn, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(lblFn))
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                            .addComponent(cmbPopPrec, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(lblPopPrec))
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                            .addComponent(cmbAlg, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(lblAlg)))
+                    .addGroup(layout.createSequentialGroup()
+                        .addContainerGap()
+                        .addComponent(panelAlg, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(lblPopSize)
-                    .addComponent(spnPopSize, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(cmbPopPrec, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(lblPopPrec))
-                .addGap(6, 6, 6)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(spnGenerations, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(lblGenerations))
-                .addGap(18, 18, 18)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(btnPlot)
                     .addComponent(btnPause)
@@ -194,23 +214,15 @@ public class MainView extends javax.swing.JFrame {
 
         lblFn.getAccessibleContext().setAccessibleName("lblFn");
         cmbFn.getAccessibleContext().setAccessibleName("cmbFn");
-        lblPopSize.getAccessibleContext().setAccessibleName("lblPop");
         lblPopPrec.getAccessibleContext().setAccessibleName("lblPopPrec");
         cmbPopPrec.getAccessibleContext().setAccessibleName("cmbPopPrec");
-        spnPopSize.getAccessibleContext().setAccessibleName("editPopSize");
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
 
     private void btnPlotActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnPlotActionPerformed
 
-        IFunction fn = this.getSelectedFunction();
-        IGenerator gen = this.getSelectedGenerator();
-        int popSize = (Integer)this.spnPopSize.getValue();
-        int genNum = (Integer)this.spnGenerations.getValue();
-        //IAlgorithm alg = new AnnealingAlg(fn, gen, 10, 0.1f, 0.9f, popSize);
-        IAlgorithm alg = new JDEEvolutionAlg(fn, gen, genNum, 
-                popSize, 0.5f, 0.9f);
+        IAlgorithm alg = this.getAlgorithm();
         
         boolean started = false;
         if (this.thread == null)
@@ -240,6 +252,46 @@ public class MainView extends javax.swing.JFrame {
     private void btnPauseActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnPauseActionPerformed
         this.thread.pause();
     }//GEN-LAST:event_btnPauseActionPerformed
+
+    private void cmbAlgActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_cmbAlgActionPerformed
+        int index = this.cmbAlg.getSelectedIndex();
+        
+        switch(index)
+        {
+            case 0:
+                this.algPanel.setAlgorithm(
+                        new BlindAlg(this.getSelectedFunction(),
+                        this.getSelectedGenerator()));
+                break;
+            case 1:
+                this.algPanel.setAlgorithm(
+                        new ImprovedBlindAlg(this.getSelectedFunction(),
+                        this.getSelectedGenerator()));
+                break;
+            case 2:
+                this.algPanel.setAlgorithm(
+                        new AnnealingAlg(this.getSelectedFunction(),
+                        this.getSelectedGenerator()));
+                break;
+            case 3:
+                this.algPanel.setAlgorithm(
+                        new DiffEvolutionAlg(this.getSelectedFunction(),
+                        this.getSelectedGenerator()));
+                break;
+            case 4:
+                this.algPanel.setAlgorithm(
+                        new JDEEvolutionAlg(this.getSelectedFunction(),
+                        this.getSelectedGenerator()));
+                break;
+            case 5:
+                this.algPanel.setAlgorithm(
+                        new SOMAAlg(this.getSelectedFunction(),
+                        this.getSelectedGenerator()));
+                break;
+            default:
+                break;
+        }
+    }//GEN-LAST:event_cmbAlgActionPerformed
 
     private IFunction getSelectedFunction()
     {
@@ -282,21 +334,54 @@ public class MainView extends javax.swing.JFrame {
                 return new FloatGenerator();
         }
     }
+    
+    private IAlgorithm getAlgorithm()
+    {
+        int index = this.cmbAlg.getSelectedIndex();
+        List<Float> args = this.algPanel.values();
+        IFunction fn = this.getSelectedFunction();
+        IGenerator g = this.getSelectedGenerator();
+        
+        switch(index)
+        {
+            case 0:
+                return new BlindAlg(fn, g, args.get(0).intValue(), 
+                        args.get(1).intValue());
+            case 1:
+                return new ImprovedBlindAlg(fn, g, args.get(0).intValue(),
+                        args.get(1).intValue());
+            case 2:
+                return new AnnealingAlg(fn, g, args.get(0), args.get(1), 
+                        args.get(2), args.get(3).intValue());
+            case 3:
+                return new DiffEvolutionAlg(fn, g, args.get(0).intValue(), 
+                        args.get(1).intValue(), args.get(2), args.get(3));
+            case 4:
+                return new JDEEvolutionAlg(fn, g, args.get(0).intValue(),
+                        args.get(1).intValue(), args.get(2), args.get(3));
+            case 5:
+                return new SOMAAlg(fn, g, args.get(0), args.get(1),
+                        args.get(2), args.get(3).intValue(), 
+                        args.get(4).intValue());
+            default:
+                return new BlindAlg(fn, g, args.get(0).intValue(), 
+                        args.get(1).intValue());
+        }
+    }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton btnPause;
     private javax.swing.JButton btnPlay;
     private javax.swing.JButton btnPlot;
+    private javax.swing.JComboBox<String> cmbAlg;
     private javax.swing.JComboBox<String> cmbFn;
     private javax.swing.JComboBox<String> cmbPopPrec;
+    private javax.swing.JLabel lblAlg;
     private javax.swing.JLabel lblBest;
     private javax.swing.JLabel lblBestValue;
     private javax.swing.JLabel lblFn;
-    private javax.swing.JLabel lblGenerations;
     private javax.swing.JLabel lblPopPrec;
-    private javax.swing.JLabel lblPopSize;
+    private javax.swing.JPanel panelAlg;
     private javax.swing.JPanel plotPanel;
-    private javax.swing.JSpinner spnGenerations;
-    private javax.swing.JSpinner spnPopSize;
     // End of variables declaration//GEN-END:variables
 }

@@ -25,26 +25,6 @@
       <Group type="103" groupAlignment="0" attributes="0">
           <Group type="102" attributes="0">
               <Group type="103" groupAlignment="0" attributes="0">
-                  <Component id="lblFn" alignment="0" min="-2" max="-2" attributes="0"/>
-                  <Component id="lblPopSize" alignment="0" min="-2" max="-2" attributes="0"/>
-                  <Component id="lblPopPrec" alignment="0" min="-2" max="-2" attributes="0"/>
-              </Group>
-              <EmptySpace min="-2" pref="6" max="-2" attributes="0"/>
-              <Group type="103" groupAlignment="0" max="-2" attributes="0">
-                  <Component id="cmbFn" max="32767" attributes="0"/>
-                  <Component id="cmbPopPrec" max="32767" attributes="0"/>
-                  <Component id="spnPopSize" max="32767" attributes="0"/>
-              </Group>
-              <EmptySpace min="0" pref="194" max="32767" attributes="0"/>
-          </Group>
-          <Group type="102" attributes="0">
-              <Group type="103" groupAlignment="0" attributes="0">
-                  <Group type="102" attributes="0">
-                      <Component id="lblGenerations" min="-2" max="-2" attributes="0"/>
-                      <EmptySpace min="-2" pref="25" max="-2" attributes="0"/>
-                      <Component id="spnGenerations" min="-2" pref="171" max="-2" attributes="0"/>
-                      <EmptySpace min="0" pref="0" max="32767" attributes="0"/>
-                  </Group>
                   <Group type="102" attributes="0">
                       <EmptySpace max="-2" attributes="0"/>
                       <Component id="plotPanel" max="32767" attributes="0"/>
@@ -55,10 +35,27 @@
                       <Component id="lblBest" min="-2" max="-2" attributes="0"/>
                       <EmptySpace max="-2" attributes="0"/>
                       <Component id="lblBestValue" min="-2" max="-2" attributes="0"/>
-                      <EmptySpace max="32767" attributes="0"/>
+                      <EmptySpace pref="424" max="32767" attributes="0"/>
                       <Component id="btnPlay" min="-2" max="-2" attributes="0"/>
                       <EmptySpace max="-2" attributes="0"/>
                       <Component id="btnPause" min="-2" max="-2" attributes="0"/>
+                  </Group>
+                  <Group type="102" attributes="0">
+                      <Group type="103" groupAlignment="0" attributes="0">
+                          <Group type="103" alignment="0" groupAlignment="1" attributes="0">
+                              <Component id="lblPopPrec" min="-2" max="-2" attributes="0"/>
+                              <Component id="lblFn" min="-2" max="-2" attributes="0"/>
+                          </Group>
+                          <Component id="lblAlg" alignment="0" min="-2" max="-2" attributes="0"/>
+                      </Group>
+                      <EmptySpace min="-2" pref="44" max="-2" attributes="0"/>
+                      <Group type="103" groupAlignment="0" max="-2" attributes="0">
+                          <Component id="cmbFn" max="32767" attributes="0"/>
+                          <Component id="cmbPopPrec" max="32767" attributes="0"/>
+                          <Component id="cmbAlg" max="32767" attributes="0"/>
+                      </Group>
+                      <EmptySpace max="-2" attributes="0"/>
+                      <Component id="panelAlg" max="32767" attributes="0"/>
                   </Group>
               </Group>
               <EmptySpace max="-2" attributes="0"/>
@@ -68,26 +65,29 @@
     <DimensionLayout dim="1">
       <Group type="103" groupAlignment="0" attributes="0">
           <Group type="102" attributes="0">
-              <Group type="103" groupAlignment="3" attributes="0">
-                  <Component id="cmbFn" alignment="3" min="-2" max="-2" attributes="0"/>
-                  <Component id="lblFn" alignment="3" min="-2" max="-2" attributes="0"/>
+              <Group type="103" groupAlignment="0" attributes="0">
+                  <Group type="102" attributes="0">
+                      <Group type="103" groupAlignment="3" attributes="0">
+                          <Component id="cmbFn" alignment="3" min="-2" max="-2" attributes="0"/>
+                          <Component id="lblFn" alignment="3" min="-2" max="-2" attributes="0"/>
+                      </Group>
+                      <EmptySpace max="-2" attributes="0"/>
+                      <Group type="103" groupAlignment="3" attributes="0">
+                          <Component id="cmbPopPrec" alignment="3" min="-2" max="-2" attributes="0"/>
+                          <Component id="lblPopPrec" alignment="3" min="-2" max="-2" attributes="0"/>
+                      </Group>
+                      <EmptySpace max="-2" attributes="0"/>
+                      <Group type="103" groupAlignment="3" attributes="0">
+                          <Component id="cmbAlg" alignment="3" min="-2" max="-2" attributes="0"/>
+                          <Component id="lblAlg" alignment="3" min="-2" max="-2" attributes="0"/>
+                      </Group>
+                  </Group>
+                  <Group type="102" attributes="0">
+                      <EmptySpace max="-2" attributes="0"/>
+                      <Component id="panelAlg" min="-2" max="-2" attributes="0"/>
+                  </Group>
               </Group>
               <EmptySpace max="-2" attributes="0"/>
-              <Group type="103" groupAlignment="3" attributes="0">
-                  <Component id="lblPopSize" alignment="3" min="-2" max="-2" attributes="0"/>
-                  <Component id="spnPopSize" alignment="3" min="-2" max="-2" attributes="0"/>
-              </Group>
-              <EmptySpace max="-2" attributes="0"/>
-              <Group type="103" groupAlignment="3" attributes="0">
-                  <Component id="cmbPopPrec" alignment="3" min="-2" max="-2" attributes="0"/>
-                  <Component id="lblPopPrec" alignment="3" min="-2" max="-2" attributes="0"/>
-              </Group>
-              <EmptySpace min="-2" pref="6" max="-2" attributes="0"/>
-              <Group type="103" groupAlignment="3" attributes="0">
-                  <Component id="spnGenerations" alignment="3" min="-2" max="-2" attributes="0"/>
-                  <Component id="lblGenerations" alignment="3" min="-2" max="-2" attributes="0"/>
-              </Group>
-              <EmptySpace type="separate" max="-2" attributes="0"/>
               <Group type="103" groupAlignment="3" attributes="0">
                   <Component id="btnPlot" alignment="3" min="-2" max="-2" attributes="0"/>
                   <Component id="btnPause" alignment="3" min="-2" max="-2" attributes="0"/>
@@ -134,14 +134,6 @@
         <AuxValue name="JavaCodeGenerator_TypeParameters" type="java.lang.String" value="&lt;String&gt;"/>
       </AuxValues>
     </Component>
-    <Component class="javax.swing.JLabel" name="lblPopSize">
-      <Properties>
-        <Property name="text" type="java.lang.String" value="Population size:"/>
-      </Properties>
-      <AccessibilityProperties>
-        <Property name="AccessibleContext.accessibleName" type="java.lang.String" value="lblPop"/>
-      </AccessibilityProperties>
-    </Component>
     <Component class="javax.swing.JLabel" name="lblPopPrec">
       <Properties>
         <Property name="text" type="java.lang.String" value="Precision:"/>
@@ -166,11 +158,6 @@
         <AuxValue name="JavaCodeGenerator_TypeParameters" type="java.lang.String" value="&lt;String&gt;"/>
       </AuxValues>
     </Component>
-    <Component class="javax.swing.JSpinner" name="spnPopSize">
-      <AccessibilityProperties>
-        <Property name="AccessibleContext.accessibleName" type="java.lang.String" value="editPopSize"/>
-      </AccessibilityProperties>
-    </Component>
     <Component class="javax.swing.JButton" name="btnPlot">
       <Properties>
         <Property name="text" type="java.lang.String" value="Start generating"/>
@@ -189,18 +176,11 @@
         </DimensionLayout>
         <DimensionLayout dim="1">
           <Group type="103" groupAlignment="0" attributes="0">
-              <EmptySpace min="0" pref="351" max="32767" attributes="0"/>
+              <EmptySpace min="0" pref="335" max="32767" attributes="0"/>
           </Group>
         </DimensionLayout>
       </Layout>
     </Container>
-    <Component class="javax.swing.JLabel" name="lblGenerations">
-      <Properties>
-        <Property name="text" type="java.lang.String" value="Generations:"/>
-      </Properties>
-    </Component>
-    <Component class="javax.swing.JSpinner" name="spnGenerations">
-    </Component>
     <Component class="javax.swing.JButton" name="btnPause">
       <Properties>
         <Property name="text" type="java.lang.String" value="Pause"/>
@@ -229,5 +209,45 @@
         <Property name="text" type="java.lang.String" value="none"/>
       </Properties>
     </Component>
+    <Component class="javax.swing.JLabel" name="lblAlg">
+      <Properties>
+        <Property name="text" type="java.lang.String" value="Algorithm:"/>
+      </Properties>
+    </Component>
+    <Component class="javax.swing.JComboBox" name="cmbAlg">
+      <Properties>
+        <Property name="model" type="javax.swing.ComboBoxModel" editor="org.netbeans.modules.form.editors2.ComboBoxModelEditor">
+          <StringArray count="6">
+            <StringItem index="0" value="Blind search"/>
+            <StringItem index="1" value="Improved blind search"/>
+            <StringItem index="2" value="Simulated annealing"/>
+            <StringItem index="3" value="Differential Evolution"/>
+            <StringItem index="4" value="jDE"/>
+            <StringItem index="5" value="SOMA"/>
+          </StringArray>
+        </Property>
+      </Properties>
+      <Events>
+        <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="cmbAlgActionPerformed"/>
+      </Events>
+      <AuxValues>
+        <AuxValue name="JavaCodeGenerator_TypeParameters" type="java.lang.String" value="&lt;String&gt;"/>
+      </AuxValues>
+    </Component>
+    <Container class="javax.swing.JPanel" name="panelAlg">
+
+      <Layout>
+        <DimensionLayout dim="0">
+          <Group type="103" groupAlignment="0" attributes="0">
+              <EmptySpace min="0" pref="0" max="32767" attributes="0"/>
+          </Group>
+        </DimensionLayout>
+        <DimensionLayout dim="1">
+          <Group type="103" groupAlignment="0" attributes="0">
+              <EmptySpace min="0" pref="146" max="32767" attributes="0"/>
+          </Group>
+        </DimensionLayout>
+      </Layout>
+    </Container>
   </SubComponents>
 </Form>
