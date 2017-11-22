@@ -11,6 +11,7 @@ import bia.algorithms.DiffEvolutionAlg;
 import bia.algorithms.IAlgorithm;
 import bia.algorithms.ImprovedBlindAlg;
 import bia.algorithms.JDEEvolutionAlg;
+import bia.algorithms.ParticleSwarmAlg;
 import bia.algorithms.SOMAAlg;
 import bia.functions.AckleysFn;
 import bia.functions.BealeFn;
@@ -129,7 +130,7 @@ public class MainView extends javax.swing.JFrame {
 
         lblAlg.setText("Algorithm:");
 
-        cmbAlg.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Blind search", "Improved blind search", "Simulated annealing", "Differential Evolution", "jDE", "SOMA" }));
+        cmbAlg.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Blind search", "Improved blind search", "Simulated annealing", "Differential Evolution", "jDE", "SOMA", "Particle Swarm Optimization" }));
         cmbAlg.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 cmbAlgActionPerformed(evt);
@@ -288,6 +289,11 @@ public class MainView extends javax.swing.JFrame {
                         new SOMAAlg(this.getSelectedFunction(),
                         this.getSelectedGenerator()));
                 break;
+            case 6:
+                this.algPanel.setAlgorithm(
+                        new ParticleSwarmAlg(this.getSelectedFunction(),
+                        this.getSelectedGenerator()));
+                break;
             default:
                 break;
         }
@@ -363,6 +369,9 @@ public class MainView extends javax.swing.JFrame {
                 return new SOMAAlg(fn, g, args.get(0), args.get(1),
                         args.get(2), args.get(3).intValue(), 
                         args.get(4).intValue());
+            case 6:
+                return new ParticleSwarmAlg(fn, g, args.get(0).intValue(),
+                        args.get(1).intValue());
             default:
                 return new BlindAlg(fn, g, args.get(0).intValue(), 
                         args.get(1).intValue());

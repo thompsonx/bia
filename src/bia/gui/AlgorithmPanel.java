@@ -7,7 +7,6 @@ package bia.gui;
 
 import bia.algorithms.IAlgorithm;
 import bia.utils.Pair;
-import java.awt.BorderLayout;
 import java.util.ArrayList;
 import java.util.List;
 import javax.swing.BoxLayout;
