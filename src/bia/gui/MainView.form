@@ -217,7 +217,7 @@
     <Component class="javax.swing.JComboBox" name="cmbAlg">
       <Properties>
         <Property name="model" type="javax.swing.ComboBoxModel" editor="org.netbeans.modules.form.editors2.ComboBoxModelEditor">
-          <StringArray count="7">
+          <StringArray count="8">
             <StringItem index="0" value="Blind search"/>
             <StringItem index="1" value="Improved blind search"/>
             <StringItem index="2" value="Simulated annealing"/>
@@ -225,6 +225,7 @@
             <StringItem index="4" value="jDE"/>
             <StringItem index="5" value="SOMA"/>
             <StringItem index="6" value="Particle Swarm Optimization"/>
+            <StringItem index="7" value="Evolution strategy"/>
           </StringArray>
         </Property>
       </Properties>

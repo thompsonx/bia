@@ -8,6 +8,7 @@ package bia.gui;
 import bia.algorithms.AnnealingAlg;
 import bia.algorithms.BlindAlg;
 import bia.algorithms.DiffEvolutionAlg;
+import bia.algorithms.EvolutionStrategyAlg;
 import bia.algorithms.IAlgorithm;
 import bia.algorithms.ImprovedBlindAlg;
 import bia.algorithms.JDEEvolutionAlg;
@@ -130,7 +131,7 @@ public class MainView extends javax.swing.JFrame {
 
         lblAlg.setText("Algorithm:");
 
-        cmbAlg.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Blind search", "Improved blind search", "Simulated annealing", "Differential Evolution", "jDE", "SOMA", "Particle Swarm Optimization" }));
+        cmbAlg.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Blind search", "Improved blind search", "Simulated annealing", "Differential Evolution", "jDE", "SOMA", "Particle Swarm Optimization", "Evolution strategy" }));
         cmbAlg.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 cmbAlgActionPerformed(evt);
@@ -294,6 +295,11 @@ public class MainView extends javax.swing.JFrame {
                         new ParticleSwarmAlg(this.getSelectedFunction(),
                         this.getSelectedGenerator()));
                 break;
+            case 7:
+                this.algPanel.setAlgorithm(
+                        new EvolutionStrategyAlg(this.getSelectedFunction(),
+                        this.getSelectedGenerator()));
+                break;
             default:
                 break;
         }
@@ -372,6 +378,9 @@ public class MainView extends javax.swing.JFrame {
             case 6:
                 return new ParticleSwarmAlg(fn, g, args.get(0).intValue(),
                         args.get(1).intValue());
+            case 7:
+                return new EvolutionStrategyAlg(fn, g, args.get(0).intValue(),
+                        args.get(1).intValue(), args.get(2), args.get(3));
             default:
                 return new BlindAlg(fn, g, args.get(0).intValue(), 
                         args.get(1).intValue());
